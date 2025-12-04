@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-01-XX
+
+### Added
+- Spring physics animations support
+- `spring()` method for custom spring animations with configurable mass, stiffness, damping, and initial velocity
+- `springIOS()` method for iOS-style snappy spring animations
+- `springGentle()` method for gentle spring animations with smooth bounce
+- `springBouncy()` method for bouncy spring animations with high bounce
+- Support for unbounded animation controllers for spring physics
+
 ## [1.0.1] - 2025-01-XX
 
 ### Changed

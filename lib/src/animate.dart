@@ -12,6 +12,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'dart:math' as math;
 
 /// Helper class for shorthand duration notation
@@ -140,6 +141,11 @@ class AnimationConfig {
   bool bounce;
   bool pulse;
   
+  // Spring physics
+  SpringDescription? spring;
+  double? springInitialVelocity;
+  bool useSpring;
+  
   AnimationConfig({
     this.scale,
     this.scaleX,
@@ -159,6 +165,9 @@ class AnimationConfig {
     this.persist = false,
     this.bounce = false,
     this.pulse = false,
+    this.spring,
+    this.springInitialVelocity,
+    this.useSpring = false,
   });
   
   AnimationConfig copyWith({
@@ -180,6 +189,9 @@ class AnimationConfig {
     bool? persist,
     bool? bounce,
     bool? pulse,
+    SpringDescription? spring,
+    double? springInitialVelocity,
+    bool? useSpring,
   }) {
     return AnimationConfig(
       scale: scale ?? this.scale,
@@ -200,6 +212,9 @@ class AnimationConfig {
       persist: persist ?? this.persist,
       bounce: bounce ?? this.bounce,
       pulse: pulse ?? this.pulse,
+      spring: spring ?? this.spring,
+      springInitialVelocity: springInitialVelocity ?? this.springInitialVelocity,
+      useSpring: useSpring ?? this.useSpring,
     );
   }
   
@@ -224,7 +239,10 @@ class AnimationConfig {
         other.repeatCount == repeatCount &&
         other.persist == persist &&
         other.bounce == bounce &&
-        other.pulse == pulse;
+      other.pulse == pulse &&
+      other.spring == spring &&
+      other.springInitialVelocity == springInitialVelocity &&
+      other.useSpring == useSpring;
   }
   
   @override
@@ -248,6 +266,9 @@ class AnimationConfig {
       persist,
       bounce,
       pulse,
+      spring,
+      springInitialVelocity,
+      useSpring,
     );
   }
 }
@@ -441,6 +462,53 @@ class AnimatedWidgetBuilder extends StatelessWidget {
     return _copyWith(config: config.copyWith(persist: true));
   }
   
+  /// Use spring physics animation
+  /// Example: .spring(mass: 1.0, stiffness: 500.0, damping: 15.0)
+  AnimatedWidgetBuilder spring({
+    double mass = 1.0,
+    double stiffness = 500.0,
+    double damping = 15.0,
+    double? initialVelocity,
+  }) {
+    return _copyWith(
+      config: config.copyWith(
+        useSpring: true,
+        spring: SpringDescription(mass: mass, stiffness: stiffness, damping: damping),
+        springInitialVelocity: initialVelocity ?? 0.0,
+      ),
+    );
+  }
+  
+  /// iOS-style spring animation (snappy with less bounce)
+  AnimatedWidgetBuilder springIOS({double? initialVelocity}) {
+    return spring(
+      mass: 1.2,
+      stiffness: 500.0,
+      damping: 15.0,
+      initialVelocity: initialVelocity,
+    );
+  }
+  
+  /// Gentle spring animation (smooth with more bounce)
+  AnimatedWidgetBuilder springGentle({double? initialVelocity}) {
+    return spring(
+      mass: 1.0,
+      stiffness: 180.0,
+      damping: 24.0,
+      initialVelocity: initialVelocity,
+    );
+  }
+  
+  /// Bouncy spring animation (high bounce)
+  AnimatedWidgetBuilder springBouncy({double? initialVelocity}) {
+    return spring(
+      mass: 1.0,
+      stiffness: 250.0,
+      damping: 10.0,
+      initialVelocity: initialVelocity,
+    );
+  }
+  
 }
 
 /// Internal widget that wraps the child with animation
@@ -481,16 +549,24 @@ class _AnimatedWidgetWrapperState extends State<_AnimatedWidgetWrapper>
   void _initializeAnimation() {
     final config = widget.config;
     
+    if (config.useSpring && config.spring != null) {
+      // Use unbounded controller for spring animations
+      _controller = AnimationController.unbounded(
+        vsync: this,
+      );
+      _animation = _controller;
+    } else {
+      // Use bounded controller for regular animations
     _controller = AnimationController(
       duration: config.duration,
-      vsync: this, // We provide our own ticker via mixin - internal only
+        vsync: this,
     );
-    
     // Apply curve
     _animation = CurvedAnimation(
       parent: _controller,
       curve: config.curve,
     );
+    }
     
     _initialized = true;
   }
@@ -585,6 +661,32 @@ class _AnimatedWidgetWrapperState extends State<_AnimatedWidgetWrapper>
     
     final config = widget.config;
     
+    if (config.useSpring && config.spring != null) {
+      // Use spring simulation
+      final spring = config.spring!;
+      final initialVelocity = config.springInitialVelocity ?? 0.0;
+      
+      // Determine start and end values based on animation type
+      double startValue = 0.0;
+      double endValue = 1.0;
+      
+      // Adjust based on what's being animated
+      if (config.scale != null) {
+        startValue = 1.0;
+        endValue = config.scale!;
+      } else if (config.opacity != null) {
+        startValue = config.opacity == 0.0 ? 1.0 : 0.0;
+        endValue = config.opacity!;
+      }
+      
+      final simulation = SpringSimulation(
+        spring,
+        startValue,
+        endValue,
+        initialVelocity,
+      );
+      _controller.animateWith(simulation);
+    } else {
     // Handle repeat
     if (config.repeat) {
       _controller.repeat(reverse: config.reverse);
@@ -594,6 +696,7 @@ class _AnimatedWidgetWrapperState extends State<_AnimatedWidgetWrapper>
     } else {
       // Single animation forward
       _controller.forward();
+      }
     }
   }
   
