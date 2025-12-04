@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/physics.dart';
 import 'dart:async';
 import 'dart:math' as math;
@@ -106,10 +105,8 @@ class _GestureDetectorWrapperState extends State<_GestureDetectorWrapper>
   double _offsetY = 0.0;
   
   Timer? _longPressTimer;
-  bool _isPressed = false;
   bool _isDisposed = false;
   Offset? _initialPosition;
-  Offset? _cursorPosition;
   bool _isPointerInside = false;
 
   // Spring configurations matching swift_animations springIOS style
@@ -151,7 +148,6 @@ class _GestureDetectorWrapperState extends State<_GestureDetectorWrapper>
     if (_isDisposed) return;
     
     _initialPosition = event.localPosition;
-    _cursorPosition = event.localPosition;
     _isPointerInside = true;
     
     final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
@@ -175,7 +171,6 @@ class _GestureDetectorWrapperState extends State<_GestureDetectorWrapper>
     _scaleController.animateWith(simulation);
     
     setState(() {
-      _isPressed = true;
       _scale = targetScale;
     });
     
@@ -197,7 +192,6 @@ class _GestureDetectorWrapperState extends State<_GestureDetectorWrapper>
     
     final position = event.localPosition;
     final size = renderBox.size;
-    _cursorPosition = position;
     _isPointerInside = position.dx >= 0 && 
                        position.dx <= size.width && 
                        position.dy >= 0 && 
@@ -289,14 +283,12 @@ class _GestureDetectorWrapperState extends State<_GestureDetectorWrapper>
     );
     
     setState(() {
-      _isPressed = false;
       _scale = 1.0;
       _stretchX = 1.0;
       _stretchY = 1.0;
       _offsetX = 0.0;
       _offsetY = 0.0;
       _initialPosition = null;
-      _cursorPosition = null;
     });
     
     if (_isPointerInside) {
@@ -339,14 +331,12 @@ class _GestureDetectorWrapperState extends State<_GestureDetectorWrapper>
     );
     
     setState(() {
-      _isPressed = false;
       _scale = 1.0;
       _stretchX = 1.0;
       _stretchY = 1.0;
       _offsetX = 0.0;
       _offsetY = 0.0;
       _initialPosition = null;
-      _cursorPosition = null;
     });
   }
 
@@ -367,13 +357,17 @@ class _GestureDetectorWrapperState extends State<_GestureDetectorWrapper>
           _offsetYController,
         ]),
         builder: (context, child) {
+          final scaleX = _scaleController.value * _stretchXController.value;
+          final scaleY = _scaleController.value * _stretchYController.value;
+          final translateX = _offsetXController.value;
+          final translateY = _offsetYController.value;
+          
           return Transform(
             transform: Matrix4.identity()
-              ..translate(_offsetXController.value, _offsetYController.value)
-              ..scale(
-                _scaleController.value * _stretchXController.value,
-                _scaleController.value * _stretchYController.value,
-              ),
+              ..setEntry(0, 3, translateX)
+              ..setEntry(1, 3, translateY)
+              ..setEntry(0, 0, scaleX)
+              ..setEntry(1, 1, scaleY),
             alignment: Alignment.center,
             child: widget.child,
           );
