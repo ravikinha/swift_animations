@@ -1,0 +1,24 @@
+name: swift_animations
+description: SwiftUI-like declarative animations for Flutter. Zero boilerplate - no controllers, no ticker providers required! Works on all platforms.
+version: 1.0.0
+homepage: https://swiftflutter.com
+repository: https://github.com/ravikinha/swift_animations
+issue_tracker: https://github.com/ravikinha/swift_animations/issues
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+# Package configuration
+flutter:
+  # This package does not use any assets
+
