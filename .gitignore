@@ -1,0 +1,24 @@
+# Build artifacts
+build/
+.dart_tool/
+*.iml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Example build files
+example/build/
+example/.dart_tool/
+
+# Pub
+.packages
+pubspec.lock
+
