@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-01-XX
+
+### Added
+- Gesture extensions with `.sGestureDetector()` method
+- Liquid tap effects with spring physics animations
+- Scale animation on tap with iOS-style spring physics
+- Stretch effects during drag gestures
+- Long press support with configurable duration
+- Auto-scaling based on widget size
+- Customizable stretch and translate sensitivity
+
 ## [1.1.0] - 2025-01-XX
 
 ### Added

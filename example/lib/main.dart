@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swift_animations/swift_animations.dart';
+import 'gesture_example.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,7 +41,7 @@ class _AnimationExamplesPageState extends State<AnimationExamplesPage> {
         padding: const EdgeInsets.all(16.0),
         children: [
           const Text(
-            'Scroll to see animations!',
+            'Swift Animations Examples',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -50,7 +51,60 @@ class _AnimationExamplesPageState extends State<AnimationExamplesPage> {
             style: TextStyle(fontSize: 14, color: Colors.grey),
             textAlign: TextAlign.center,
           ),
+          const SizedBox(height: 24),
+          // Gesture Example Button
+          Card(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GestureExample(),
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.touch_app, size: 32),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Gesture Extension',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Tap to see .sGestureDetector() examples',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, size: 16),
+                  ],
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 32),
+          const Text(
+            'Declarative Animations',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
           
           // Fade In Example
           _buildSection(
