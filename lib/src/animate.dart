@@ -247,7 +247,7 @@ class AnimationConfig {
   
   @override
   int get hashCode {
-    return Object.hash(
+    return Object.hashAll([
       scale,
       scaleX,
       scaleY,
@@ -269,7 +269,7 @@ class AnimationConfig {
       spring,
       springInitialVelocity,
       useSpring,
-    );
+    ]);
   }
 }
 
