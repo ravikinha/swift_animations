@@ -75,6 +75,26 @@ Container(
   - `stretchSensitivity` - Stretch effect sensitivity
   - `translateSensitivity` - Translation sensitivity
 
+### Navigation Animations
+Platform-specific navigation animations with a fluent API:
+
+**Available Navigation Methods:**
+- `swift.push(route)` - Push a new route
+- `swift.pushReplacement(route)` - Replace current route
+- `swift.pushRoute(route)` - Push a route object
+- `swift.pushNamed(routeName)` - Push a named route
+- `swift.pushReplacementNamed(routeName)` - Replace with named route
+- `swift.pushNamedAndRemoveUntil(routeName, predicate)` - Push named route and remove until
+- `swift.pushAndRemoveUntil(route, predicate)` - Push route and remove until
+
+**Configuration:**
+- `.ios()` - Use iOS-style slide transition (from right)
+- `.android()` - Use Android-style fade + slide up transition
+- `.web()` - Use web-style fade transition
+- `.duration(milliseconds)` - Animation duration (int or Duration)
+- `.curve(curve)` - Animation curve (e.g., `Curves.easeInOut`)
+- `.go(context)` - Execute navigation
+
 ## Examples
 
 ### Basic Animation
@@ -140,6 +160,66 @@ Container(
 .animate().duration(0.5.s)     // 0.5 seconds
 .animate().duration(5.m)       // 5 minutes
 .animate().duration(".500ms")  // String format
+```
+
+### Navigation Animations
+
+#### Basic Push Navigation
+```dart
+// iOS-style navigation
+swift.push(NextPage())
+  .ios()
+  .duration(500)
+  .curve(Curves.easeInOut)
+  .go(context);
+
+// Android-style navigation
+swift.push(NextPage())
+  .android()
+  .duration(500)
+  .curve(Curves.easeInOut)
+  .go(context);
+```
+
+#### Push Replacement
+```dart
+swift.pushReplacement(HomePage())
+  .ios()
+  .duration(300)
+  .go(context);
+```
+
+#### Push Named Route
+```dart
+swift.pushNamed('/details')
+  .android()
+  .duration(400)
+  .curve(Curves.easeOut)
+  .go(context, arguments: {'id': 123});
+```
+
+#### Push and Remove Until
+```dart
+swift.pushAndRemoveUntil(HomePage(), (route) => false)
+  .ios()
+  .duration(500)
+  .go(context);
+```
+
+#### Push Named and Remove Until
+```dart
+swift.pushNamedAndRemoveUntil('/home', (route) => false)
+  .android()
+  .duration(400)
+  .go(context);
+```
+
+#### Push Replacement Named
+```dart
+swift.pushReplacementNamed('/login')
+  .ios()
+  .duration(300)
+  .go(context, result: 'logged_out');
 ```
 
 ## Why Swift Animations?

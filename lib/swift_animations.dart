@@ -22,4 +22,5 @@ library;
 
 export 'src/animate.dart';
 export 'src/gesture_extensions.dart';
+export 'src/navigation.dart';
 

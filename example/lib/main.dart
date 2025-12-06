@@ -18,6 +18,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const AnimationExamplesPage(),
+      routes: {
+        '/detail': (context) => const DetailPage(title: 'Named Route Detail'),
+        '/home': (context) => const AnimationExamplesPage(),
+        '/login': (context) => const DetailPage(title: 'Login Page'),
+      },
     );
   }
 }
@@ -87,6 +92,52 @@ class _AnimationExamplesPageState extends State<AnimationExamplesPage> {
                             style: TextStyle(
                               fontSize: 14,
                               color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, size: 16),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Navigation Example Button
+          Card(
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            child: InkWell(
+              onTap: () {
+                swift.push(const NavigationExamplePage())
+                  .ios()
+                  .duration(500)
+                  .curve(Curves.easeInOut)
+                  .go(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.navigation, size: 32),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Navigation Animations',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Tap to see platform-specific navigation examples',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).colorScheme.onSecondaryContainer.withOpacity(0.7),
                             ),
                           ),
                         ],
@@ -542,5 +593,552 @@ class _AnimationExamplesPageState extends State<AnimationExamplesPage> {
       .delay(Duration(milliseconds: delayMs))
       .duration(0.5.s)
       .repeat(reverse: true);
+  }
+}
+
+/// Navigation Example Page
+class NavigationExamplePage extends StatelessWidget {
+  const NavigationExamplePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Navigation Animations'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          const Text(
+            'All Navigation Types',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Test all navigation methods with platform-specific animations',
+            style: TextStyle(fontSize: 14, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          
+          // Section: Push Navigation
+          _buildSectionTitle('1. Push Navigation'),
+          const SizedBox(height: 12),
+          
+          // iOS Push
+          _buildNavigationCard(
+            context: context,
+            title: 'Push (iOS Style)',
+            description: 'Slide from right, 500ms, easeInOut',
+            icon: Icons.phone_iphone,
+            color: Colors.blue,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Push - iOS Style'))
+                .ios()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Android Push
+          _buildNavigationCard(
+            context: context,
+            title: 'Push (Android Style)',
+            description: 'Fade + slide up, 500ms, easeInOut',
+            icon: Icons.android,
+            color: Colors.green,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Push - Android Style'))
+                .android()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Web Push
+          _buildNavigationCard(
+            context: context,
+            title: 'Push (Web Style)',
+            description: 'Fade transition, 400ms, easeOut',
+            icon: Icons.web,
+            color: Colors.purple,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Push - Web Style'))
+                .web()
+                .duration(400)
+                .curve(Curves.easeOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Section: Push Replacement
+          _buildSectionTitle('2. Push Replacement'),
+          const SizedBox(height: 12),
+          
+          // iOS Push Replacement
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Replacement (iOS)',
+            description: 'Replace current route, 300ms',
+            icon: Icons.swap_horiz,
+            color: Colors.orange,
+            onTap: () {
+              swift.pushReplacement(const DetailPage(title: 'Push Replacement - iOS'))
+                .ios()
+                .duration(300)
+                .curve(Curves.easeInOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Android Push Replacement
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Replacement (Android)',
+            description: 'Replace current route, 400ms',
+            icon: Icons.swap_horiz,
+            color: Colors.teal,
+            onTap: () {
+              swift.pushReplacement(const DetailPage(title: 'Push Replacement - Android'))
+                .android()
+                .duration(400)
+                .curve(Curves.easeInOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Section: Push Route
+          _buildSectionTitle('3. Push Route'),
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Route (iOS)',
+            description: 'Push route object, 500ms',
+            icon: Icons.route,
+            color: Colors.indigo,
+            onTap: () {
+              swift.pushRoute(const DetailPage(title: 'Push Route - iOS'))
+                .ios()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Route (Android)',
+            description: 'Push route object, 500ms',
+            icon: Icons.route,
+            color: Colors.cyan,
+            onTap: () {
+              swift.pushRoute(const DetailPage(title: 'Push Route - Android'))
+                .android()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Section: Push Named
+          _buildSectionTitle('4. Push Named'),
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Named (iOS)',
+            description: 'Push named route, 500ms',
+            icon: Icons.label,
+            color: Colors.pink,
+            onTap: () {
+              swift.pushNamed('/detail')
+                .ios()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context, arguments: {'from': 'navigation_example'});
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Named (Android)',
+            description: 'Push named route, 500ms',
+            icon: Icons.label,
+            color: Colors.deepOrange,
+            onTap: () {
+              swift.pushNamed('/detail')
+                .android()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context, arguments: {'from': 'navigation_example'});
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Section: Push Replacement Named
+          _buildSectionTitle('5. Push Replacement Named'),
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Replacement Named (iOS)',
+            description: 'Replace with named route, 300ms',
+            icon: Icons.swap_calls,
+            color: Colors.amber,
+            onTap: () {
+              swift.pushReplacementNamed('/login')
+                .ios()
+                .duration(300)
+                .curve(Curves.easeInOut)
+                .go(context, result: 'replaced');
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Replacement Named (Android)',
+            description: 'Replace with named route, 400ms',
+            icon: Icons.swap_calls,
+            color: Colors.lime,
+            onTap: () {
+              swift.pushReplacementNamed('/login')
+                .android()
+                .duration(400)
+                .curve(Curves.easeInOut)
+                .go(context, result: 'replaced');
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Section: Push Named And Remove Until
+          _buildSectionTitle('6. Push Named And Remove Until'),
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Named & Remove Until (iOS)',
+            description: 'Clear stack until home, 500ms',
+            icon: Icons.clear_all,
+            color: Colors.red,
+            onTap: () {
+              swift.pushNamedAndRemoveUntil('/home')
+                .ios()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context, predicate: (route) => false);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push Named & Remove Until (Android)',
+            description: 'Clear stack until home, 500ms',
+            icon: Icons.clear_all,
+            color: Colors.brown,
+            onTap: () {
+              swift.pushNamedAndRemoveUntil('/home')
+                .android()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context, predicate: (route) => false);
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Section: Push And Remove Until
+          _buildSectionTitle('7. Push And Remove Until'),
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push & Remove Until (iOS)',
+            description: 'Clear stack, push new route, 500ms',
+            icon: Icons.delete_sweep,
+            color: Colors.deepPurple,
+            onTap: () {
+              swift.pushAndRemoveUntil(const DetailPage(title: 'Push & Remove Until - iOS'))
+                .ios()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context, predicate: (route) => false);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Push & Remove Until (Android)',
+            description: 'Clear stack, push new route, 500ms',
+            icon: Icons.delete_sweep,
+            color: Colors.blueGrey,
+            onTap: () {
+              swift.pushAndRemoveUntil(const DetailPage(title: 'Push & Remove Until - Android'))
+                .android()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context, predicate: (route) => false);
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Section: Different Curves
+          _buildSectionTitle('8. Different Animation Curves'),
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Ease Out Curve',
+            description: 'iOS style, easeOut curve',
+            icon: Icons.trending_down,
+            color: Colors.blueAccent,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Ease Out Curve'))
+                .ios()
+                .duration(500)
+                .curve(Curves.easeOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Ease In Curve',
+            description: 'Android style, easeIn curve',
+            icon: Icons.trending_up,
+            color: Colors.greenAccent,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Ease In Curve'))
+                .android()
+                .duration(500)
+                .curve(Curves.easeIn)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Bounce Out Curve',
+            description: 'iOS style, bounceOut curve',
+            icon: Icons.sports_volleyball,
+            color: Colors.orangeAccent,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Bounce Out Curve'))
+                .ios()
+                .duration(600)
+                .curve(Curves.bounceOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Elastic Out Curve',
+            description: 'Android style, elasticOut curve',
+            icon: Icons.auto_awesome,
+            color: Colors.purpleAccent,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Elastic Out Curve'))
+                .android()
+                .duration(800)
+                .curve(Curves.elasticOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Section: Different Durations
+          _buildSectionTitle('9. Different Durations'),
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Fast Animation (200ms)',
+            description: 'Quick transition',
+            icon: Icons.speed,
+            color: Colors.yellow,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Fast Animation (200ms)'))
+                .ios()
+                .duration(200)
+                .curve(Curves.easeInOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Normal Animation (500ms)',
+            description: 'Standard transition',
+            icon: Icons.timer,
+            color: Colors.blue,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Normal Animation (500ms)'))
+                .ios()
+                .duration(500)
+                .curve(Curves.easeInOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildNavigationCard(
+            context: context,
+            title: 'Slow Animation (1000ms)',
+            description: 'Slow transition',
+            icon: Icons.hourglass_empty,
+            color: Colors.red,
+            onTap: () {
+              swift.push(const DetailPage(title: 'Slow Animation (1000ms)'))
+                .android()
+                .duration(1000)
+                .curve(Curves.easeInOut)
+                .go(context);
+            },
+          ),
+          
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.black87,
+      ),
+    );
+  }
+  
+  Widget _buildNavigationCard({
+    required BuildContext context,
+    required String title,
+    required String description,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      color: color,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Icon(icon, size: 32, color: Colors.white),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Detail Page for Navigation Examples
+class DetailPage extends StatelessWidget {
+  final String title;
+  
+  const DetailPage({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.check_circle, size: 80, color: Colors.green),
+            const SizedBox(height: 24),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Navigation animation completed!',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Go Back'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

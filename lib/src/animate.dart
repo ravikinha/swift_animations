@@ -451,7 +451,7 @@ class AnimatedWidgetBuilder extends StatelessWidget {
   /// Repeat animation specific number of times
   AnimatedWidgetBuilder repeatCount(int count, {bool reverse = false}) {
     return _copyWith(config: config.copyWith(
-      repeat: count > 0,
+      repeat: false, // Don't set repeat to true when using repeatCount
       repeatCount: count,
       reverse: reverse,
     ));
@@ -535,6 +535,7 @@ class _AnimatedWidgetWrapperState extends State<_AnimatedWidgetWrapper>
   bool _initialized = false;
   bool _animationStarted = false;
   final GlobalKey _key = GlobalKey();
+  void Function(AnimationStatus)? _repeatCountStatusListener;
   
   @override
   void initState() {
@@ -687,12 +688,12 @@ class _AnimatedWidgetWrapperState extends State<_AnimatedWidgetWrapper>
       );
       _controller.animateWith(simulation);
     } else {
-    // Handle repeat
-    if (config.repeat) {
-      _controller.repeat(reverse: config.reverse);
-    } else if (config.repeatCount != null && config.repeatCount! > 1) {
+    // Handle repeat - check repeatCount first before infinite repeat
+    if (config.repeatCount != null && config.repeatCount! > 1) {
       // Custom repeat count logic
       _setupRepeatCount(config.repeatCount!);
+    } else if (config.repeat) {
+      _controller.repeat(reverse: config.reverse);
     } else {
       // Single animation forward
       _controller.forward();
@@ -702,26 +703,47 @@ class _AnimatedWidgetWrapperState extends State<_AnimatedWidgetWrapper>
   
   void _setupRepeatCount(int count) {
     int currentCount = 0;
+    
     void onStatusChange(AnimationStatus status) {
-      if (status == AnimationStatus.completed) {
-        currentCount++;
-        if (currentCount < count) {
-          if (widget.config.reverse) {
-            _controller.reverse();
-          } else {
-            _controller.reset();
+      if (!mounted) return;
+      
+      if (widget.config.reverse) {
+        // For reverse animations, count each complete cycle (forward + reverse = 1)
+        if (status == AnimationStatus.completed) {
+          // Forward completed, now reverse
+          _controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          // Reverse completed, one full cycle done
+          currentCount++;
+          if (currentCount < count) {
             _controller.forward();
+          } else {
+            // Reached the count, remove listener
+            _controller.removeStatusListener(_repeatCountStatusListener!);
+            _repeatCountStatusListener = null;
           }
         }
-      } else if (status == AnimationStatus.dismissed && widget.config.reverse) {
-        currentCount++;
-        if (currentCount < count) {
-          _controller.forward();
+      } else {
+        // For non-reverse animations, count each forward completion
+        if (status == AnimationStatus.completed) {
+          currentCount++;
+          if (currentCount < count) {
+            _controller.reset();
+            _controller.forward();
+          } else {
+            // Reached the count, remove listener
+            _controller.removeStatusListener(_repeatCountStatusListener!);
+            _repeatCountStatusListener = null;
+          }
         }
       }
     }
     
-    _controller.addStatusListener(onStatusChange);
+    _repeatCountStatusListener = onStatusChange;
+    _controller.addStatusListener(_repeatCountStatusListener!);
+    
+    // Start the animation
+    _controller.forward();
   }
   
   @override
@@ -815,6 +837,14 @@ class _AnimatedWidgetWrapperState extends State<_AnimatedWidgetWrapper>
         _scrollable!.position.removeListener(_onScroll);
       } catch (e) {
         // Ignore errors if scrollable is already disposed
+      }
+    }
+    // Remove repeat count status listener if it was added
+    if (_repeatCountStatusListener != null) {
+      try {
+        _controller.removeStatusListener(_repeatCountStatusListener!);
+      } catch (e) {
+        // Ignore errors if controller is already disposed
       }
     }
     _controller.dispose();
