@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swift_animations/swift_animations.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'gesture_example.dart';
 
 void main() {
@@ -56,6 +57,9 @@ class _AnimationExamplesPageState extends State<AnimationExamplesPage> {
             style: TextStyle(fontSize: 14, color: Colors.grey),
             textAlign: TextAlign.center,
           ),
+          const SizedBox(height: 24),
+          // Buy Me a Coffee Button
+          _BuyMeACoffeeCard(),
           const SizedBox(height: 24),
           // Gesture Example Button
           Card(
@@ -1137,6 +1141,124 @@ class DetailPage extends StatelessWidget {
               child: const Text('Go Back'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// Buy Me a Coffee Card Widget
+class _BuyMeACoffeeCard extends StatelessWidget {
+  const _BuyMeACoffeeCard();
+
+  Future<void> _openBuyMeACoffee() async {
+    final uri = Uri.parse('https://buymeacoffee.com/ravikinha');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              const Color(0xFFFFDD00), // Buy Me a Coffee yellow
+              const Color(0xFFFFC107),
+            ],
+          ),
+        ),
+        child: InkWell(
+          onTap: _openBuyMeACoffee,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.coffee,
+                    color: Colors.brown,
+                    size: 32,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '☕ Support the Project',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Help create more plugins & features!',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.black.withOpacity(0.7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Support',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.brown,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Icon(
+                        Icons.arrow_forward,
+                        size: 16,
+                        color: Colors.brown,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -6,7 +6,7 @@ SwiftUI-like declarative animations for Flutter. Zero boilerplate - no controlle
 
 ```yaml
 dependencies:
-  swift_animations: ^1.2.0
+  swift_animations: ^1.2.1
 ```
 
 ## Quick Start
@@ -231,6 +231,23 @@ swift.pushReplacementNamed('/login')
 - ✅ **Visibility-based** - Animations start when widgets come into view
 - ✅ **Scroll-aware** - Automatically detects scrolling
 - ✅ **All platforms** - Works on iOS, Android, Web, macOS, Linux, Windows
+
+## ☕ Support the Project
+
+**Love using Swift Animations?** Your support helps me create more amazing plugins, add new features, and keep improving the developer experience!
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/ravikinha)
+
+Your contributions enable me to:
+- 🚀 Build more Flutter plugins and packages
+- ✨ Add exciting new features and improvements
+- 🐛 Fix bugs faster and maintain high quality
+- 📚 Create better documentation and examples
+- 💡 Explore innovative ideas for the Flutter ecosystem
+
+**Every contribution, big or small, makes a difference!** Thank you for supporting open-source development! 🙏
+
+[**Support on Buy Me a Coffee →**](https://buymeacoffee.com/ravikinha)
 
 ## License
 

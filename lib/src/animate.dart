@@ -709,13 +709,13 @@ class _AnimatedWidgetWrapperState extends State<_AnimatedWidgetWrapper>
       
       if (widget.config.reverse) {
         // For reverse animations, count each complete cycle (forward + reverse = 1)
-        if (status == AnimationStatus.completed) {
+      if (status == AnimationStatus.completed) {
           // Forward completed, now reverse
           _controller.reverse();
         } else if (status == AnimationStatus.dismissed) {
           // Reverse completed, one full cycle done
-          currentCount++;
-          if (currentCount < count) {
+        currentCount++;
+        if (currentCount < count) {
             _controller.forward();
           } else {
             // Reached the count, remove listener
@@ -726,10 +726,10 @@ class _AnimatedWidgetWrapperState extends State<_AnimatedWidgetWrapper>
       } else {
         // For non-reverse animations, count each forward completion
         if (status == AnimationStatus.completed) {
-          currentCount++;
-          if (currentCount < count) {
+        currentCount++;
+        if (currentCount < count) {
             _controller.reset();
-            _controller.forward();
+          _controller.forward();
           } else {
             // Reached the count, remove listener
             _controller.removeStatusListener(_repeatCountStatusListener!);
