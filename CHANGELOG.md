@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2025-01-XX
+
+### Added
+- Beautiful Buy Me a Coffee support button in example app
+- Support section in README with encouraging messaging
+- Direct link to support page for project development
+
+### Changed
+- Updated example app to include url_launcher for opening support links
+- Enhanced README with support section highlighting project benefits
+
 ## [1.2.1] - 2025-01-XX
 
 ### Fixed

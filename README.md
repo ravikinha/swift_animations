@@ -6,7 +6,7 @@ SwiftUI-like declarative animations for Flutter. Zero boilerplate - no controlle
 
 ```yaml
 dependencies:
-  swift_animations: ^1.2.1
+  swift_animations: ^1.2.2
 ```
 
 ## Quick Start
